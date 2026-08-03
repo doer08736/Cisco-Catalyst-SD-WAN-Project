@@ -1,0 +1,8 @@
+configure
+set deviceconfig system type static
+set deviceconfig system ip-address 10.99.99.102 netmask 255.255.255.0 default-gateway 10.99.99.1
+set deviceconfig system hostname pa-fw10p
+set deviceconfig system timezone Asia/Kolkata
+set deviceconfig system dns-setting servers primary 8.8.8.8 secondary 1.1.1.1
+
+commit

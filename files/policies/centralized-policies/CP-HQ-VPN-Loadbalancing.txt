@@ -1,0 +1,99 @@
+viptela-policy:policy
+ control-policy TP-VRRP-VPN-Loadbalancing
+    sequence 1
+     match route
+      prefix-list HQ-VPN1-Prefixes
+      tloc-list HQ2-TLOC-BOTH
+     !
+     action accept
+      set
+       tloc-list HQ2-TLOC-BOTH-99
+      !
+     !
+    !
+    sequence 11
+     match route
+      prefix-list HQ-VPN2-Prefixes
+      tloc-list HQ2-TLOC-BOTH
+     !
+     action accept
+      set
+       tloc-list HQ2-TLOC-BOTH-100
+      !
+     !
+    !
+    sequence 21
+     match route
+      prefix-list HQ-VPN1-Prefixes
+      tloc-list HQ1-TLOC-BOTH
+     !
+     action accept
+      set
+       tloc-list HQ1-TLOC-BOTH-100
+      !
+     !
+    !
+    sequence 31
+     match route
+      prefix-list HQ-VPN2-Prefixes
+      tloc-list HQ1-TLOC-BOTH
+     !
+     action accept
+      set
+       tloc-list HQ1-TLOC-BOTH-99
+      !
+     !
+    !
+  default-action accept
+ !
+ lists
+  prefix-list HQ-VPN1-Prefixes
+   ip-prefix 10.1.1.0/24 
+   ip-prefix 10.1.12.0/24 
+   ip-prefix 10.1.10.0/24 
+   ip-prefix 10.1.11.0/24 
+  !
+  prefix-list HQ-VPN2-Prefixes
+   ip-prefix 192.168.1.0/24 
+   ip-prefix 192.168.12.0/24 
+   ip-prefix 192.168.10.0/24 
+   ip-prefix 192.168.11.0/24 
+  !
+  site-list SPOKE-SITES
+   site-id 20 
+   site-id 30 
+   site-id 40 
+   site-id 50 
+   site-id 60 
+  !
+  tloc-list HQ1-TLOC-BOTH
+   tloc 10.10.10.10 color biz-internet encap ipsec 
+   tloc 10.10.10.10 color mpls encap ipsec 
+  !
+  tloc-list HQ1-TLOC-BOTH-100
+   tloc 10.10.10.10 color biz-internet encap ipsec preference 100 
+   tloc 10.10.10.10 color mpls encap ipsec preference 100 
+  !
+  tloc-list HQ1-TLOC-BOTH-99
+   tloc 10.10.10.10 color biz-internet encap ipsec preference 99 
+   tloc 10.10.10.10 color mpls encap ipsec preference 99 
+  !
+  tloc-list HQ2-TLOC-BOTH
+   tloc 10.10.10.11 color biz-internet encap ipsec 
+   tloc 10.10.10.11 color mpls encap ipsec 
+  !
+  tloc-list HQ2-TLOC-BOTH-100
+   tloc 10.10.10.11 color biz-internet encap ipsec preference 100 
+   tloc 10.10.10.11 color mpls encap ipsec preference 100 
+  !
+  tloc-list HQ2-TLOC-BOTH-99
+   tloc 10.10.10.11 color biz-internet encap ipsec preference 99 
+   tloc 10.10.10.11 color mpls encap ipsec preference 99 
+  !
+ !
+!
+apply-policy
+ site-list SPOKE-SITES
+  control-policy TP-VRRP-VPN-Loadbalancing out
+ !
+!

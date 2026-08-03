@@ -1,0 +1,25 @@
+no ip domain lookup
+line con 0
+logg sync
+hostname R35
+no cdp run
+int f0/0
+ip add 10.1.1.2 255.255.255.0
+no shut
+int lo1
+ip add 10.1.10.1 255.255.255.0
+no shut
+int lo2
+ip add 10.1.11.1 255.255.255.0
+no shut
+
+router ospf 110
+router-id 35.35.35.35
+network 0.0.0.0 255.255.255.255 area 0
+
+int lo1
+ip ospf network point-to-point
+int lo2
+ip ospf network point-to-point
+int range f0/0
+ip ospf network point-to-point

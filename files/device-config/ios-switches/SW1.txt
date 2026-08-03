@@ -1,0 +1,9 @@
+hostname SW1
+no ip domain lookup
+line con 0
+logg sync
+vlan 10
+name vpn1
+int range g0/2,g0/3,g0/0,g0/1
+sw mode ac
+sw ac vlan 10

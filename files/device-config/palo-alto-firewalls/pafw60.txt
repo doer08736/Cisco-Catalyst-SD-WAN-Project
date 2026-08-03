@@ -1,0 +1,24 @@
+configure
+set deviceconfig system type static
+set deviceconfig system ip-address 10.99.99.103 netmask 255.255.255.0 default-gateway 10.99.99.1
+set deviceconfig system hostname pa-fw60
+set deviceconfig system timezone Asia/Kolkata
+set deviceconfig system dns-setting servers primary 8.8.8.8 secondary 1.1.1.1
+set zone Inside
+set zone Outside
+
+set network profiles interface-management-profile Ping ping yes
+
+set network virtual-router VR01
+set network interface ethernet ethernet1/1 layer3 ip 192.168.7.2/24
+set zone Inside network layer3 ethernet1/1
+set network virtual-router VR01 interface ethernet1/1
+set network interface ethernet ethernet1/1 link-state up layer3 interface-management-profile Ping
+set network interface ethernet ethernet1/2 layer3 ip 60.1.1.1/24
+set zone Outside network layer3 ethernet1/2
+set network virtual-router VR01 interface ethernet1/2
+set network interface ethernet ethernet1/2 link-state up layer3 interface-management-profile Ping
+
+set network virtual-router VR01 routing-table ip static-route DR-Internet destination 0.0.0.0/0 interface ethernet1/2 nexthop ip-address 60.1.1.100
+
+commit

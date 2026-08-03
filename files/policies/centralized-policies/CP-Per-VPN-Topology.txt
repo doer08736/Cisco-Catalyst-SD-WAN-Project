@@ -1,0 +1,54 @@
+! Hub-N-Spoke for VPN1, Full Mesh for VPN2
+
+viptela-policy:policy
+ control-policy Per-VPN-Topology
+    sequence 1
+     match route
+      vpn-list VPN2
+      prefix-list _AnyIpv4PrefixList
+     !
+     action accept
+     !
+    !
+    sequence 11
+     match route
+      vpn-list VPN1
+      site-list SPOKE-SITES
+      prefix-list _AnyIpv4PrefixList
+     !
+     action accept
+      set
+       tloc-list HQ-TLOC
+      !
+     !
+    !
+  default-action accept
+ !
+ lists
+  site-list SPOKE-SITES
+   site-id 20 
+   site-id 30 
+   site-id 40 
+   site-id 50 
+   site-id 60 
+  !
+  tloc-list HQ-TLOC
+   tloc 10.10.10.10 color biz-internet encap ipsec 
+   tloc 10.10.10.10 color mpls encap ipsec 
+  !
+  vpn-list VPN1
+   vpn 1 
+  !
+  vpn-list VPN2
+   vpn 2 
+  !
+  prefix-list _AnyIpv4PrefixList
+   ip-prefix 0.0.0.0/0 le 32 
+  !
+ !
+!
+apply-policy
+ site-list SPOKE-SITES
+  control-policy Per-VPN-Topology out
+ !
+!

@@ -1,0 +1,32 @@
+configure
+set deviceconfig system type static
+set deviceconfig system ip-address 10.99.99.101 netmask 255.255.255.0 default-gateway 10.99.99.1
+set deviceconfig system hostname pa-fw10a
+set deviceconfig system timezone Asia/Kolkata
+set deviceconfig system dns-setting servers primary 8.8.8.8 secondary 1.1.1.1
+set zone Inside
+set zone Outside
+
+set network profiles interface-management-profile Ping ping yes
+
+set network virtual-router VR01
+set network interface ethernet ethernet1/7 layer3 ip 10.1.1.1/24
+set zone Inside network layer3 ethernet1/7
+set network virtual-router VR01 interface ethernet1/7
+set network interface ethernet ethernet1/7 link-state up layer3 interface-management-profile Ping
+set network interface ethernet ethernet1/1 layer3 ip 10.1.12.3/24
+set zone Outside network layer3 ethernet1/1
+set network virtual-router VR01 interface ethernet1/1
+set network interface ethernet ethernet1/1 link-state up layer3 interface-management-profile Ping
+
+set network virtual-router VR02
+set network interface ethernet ethernet1/6 layer3 ip 192.168.1.1/24
+set zone Inside network layer3 ethernet1/6
+set network virtual-router VR02 interface ethernet1/6
+set network interface ethernet ethernet1/6 link-state up layer3 interface-management-profile Ping
+set network interface ethernet ethernet1/5 layer3 ip 192.168.12.3/24
+set zone Outside network layer3 ethernet1/5
+set network virtual-router VR02 interface ethernet1/5
+set network interface ethernet ethernet1/5 link-state up layer3 interface-management-profile Ping
+
+commit

@@ -1,0 +1,84 @@
+! On-Demand Tunnel for only VPN1, VPN2 directly communicate without HUB
+
+viptela-policy:policy
+ control-policy On-Demand-Tunnelv2-VPN1
+    sequence 1
+     match route
+      site-list HQ-SITE
+      prefix-list _AnyIpv4PrefixList
+     !
+     action accept
+     !
+    !
+    sequence 11
+     match route
+      site-list SPOKE-SITES
+      color-list COLOR-MPLS
+      vpn-list VPN1
+      prefix-list _AnyIpv4PrefixList
+     !
+     action accept
+      set
+       tloc-action backup
+       tloc-list HQ-TLOC-MPLS
+      !
+     !
+    !
+    sequence 21
+     match route
+      site-list SPOKE-SITES
+      color-list COLOR-Internet
+      vpn-list VPN1
+      prefix-list _AnyIpv4PrefixList
+     !
+     action accept
+      set
+       tloc-action backup
+       tloc-list HQ-TLOC-Internet
+      !
+     !
+    !
+    sequence 31
+     match tloc
+     !
+     action accept
+     !
+    !
+  default-action accept
+ !
+ lists
+  color-list COLOR-Internet
+   color biz-internet 
+  !
+  color-list COLOR-MPLS
+   color mpls 
+  !
+  site-list HQ-SITE
+   site-id 10 
+  !
+  site-list SPOKE-SITES
+   site-id 20 
+   site-id 30 
+   site-id 40 
+   site-id 50 
+   site-id 60 
+  !
+  tloc-list HQ-TLOC-Internet
+   tloc 10.10.10.10 color biz-internet encap ipsec 
+  !
+  tloc-list HQ-TLOC-MPLS
+   tloc 10.10.10.10 color mpls encap ipsec 
+  !
+  vpn-list VPN1
+   vpn 1 
+  !
+  prefix-list _AnyIpv4PrefixList
+   ip-prefix 0.0.0.0/0 le 32 
+  !
+ !
+!
+apply-policy
+ site-list SPOKE-SITES
+  control-policy On-Demand-Tunnelv2-VPN1 out
+ !
+!

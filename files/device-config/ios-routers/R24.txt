@@ -1,0 +1,21 @@
+no ip domain lookup
+line con 0
+logg sync
+hostname R24
+no cdp run
+int f0/0
+ip add 192.168.4.3 255.255.255.0
+no shut
+int lo1
+ip add 192.168.40.1 255.255.255.0
+no shut
+int lo2
+ip add 192.168.41.1 255.255.255.0
+no shut
+
+router ospf 111
+router-id 24.24.24.24
+network 0.0.0.0 255.255.255.255 area 0
+
+int range f0/0,lo1,lo2
+ip ospf network point-to-point

@@ -1,0 +1,46 @@
+! Hub and Spoke (ALL VPN) without forming uncesssary IPSec Tunnels
+
+viptela-policy:policy
+ control-policy Hub-N-Spokev1
+    sequence 1
+     match route
+      site-list SPOKE-SITES
+      prefix-list _AnyIpv4PrefixList
+     !
+     action accept
+      set
+       tloc-list HQ-TLOC
+      !
+     !
+    !
+    sequence 11
+     match tloc
+      site-list SPOKE-SITES
+     !
+     action reject
+     !
+    !
+  default-action accept
+ !
+ lists
+  site-list SPOKE-SITES
+   site-id 20 
+   site-id 30 
+   site-id 40 
+   site-id 50 
+   site-id 60 
+  !
+  tloc-list HQ-TLOC
+   tloc 10.10.10.10 color biz-internet encap ipsec 
+   tloc 10.10.10.10 color mpls encap ipsec 
+  !
+  prefix-list _AnyIpv4PrefixList
+   ip-prefix 0.0.0.0/0 le 32 
+  !
+ !
+!
+apply-policy
+ site-list SPOKE-SITES
+  control-policy Hub-N-Spokev1 out
+ !
+!

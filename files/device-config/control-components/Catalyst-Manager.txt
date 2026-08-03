@@ -1,0 +1,32 @@
+conf t
+system
+host-name Catalyst-Manager
+site-id 1
+organization-name doer
+system-ip 10.10.10.1
+vbond 100.1.2.2
+clock timezone Asia/Kolkata
+commit
+exit
+vpn 0
+interface eth0
+ip address 100.1.2.1/24
+no shutdown
+tunnel-interface
+allow-service all
+allow-service sshd
+allow-service netconf
+allow-service https
+exit
+ip route 0.0.0.0/0 100.1.2.254
+commit
+exit
+vpn 512
+interface eth1
+no ip dhcp-client
+no shutdown
+ip address 10.99.99.100/24
+exit
+ip route 0.0.0.0/0 10.99.99.1
+exit
+commit and-quit

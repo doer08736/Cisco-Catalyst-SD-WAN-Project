@@ -1,0 +1,41 @@
+config-transaction
+hostname BR-Tokyo
+system
+organization-name doer
+site-id 40
+system-ip 10.10.10.40
+vbond 100.1.2.2
+exit
+
+clock timezone JST 9
+
+interface GigabitEthernet 1
+ip address 172.16.40.1 255.255.255.0
+no shutdown
+exit
+ip route 0.0.0.0 0.0.0.0 172.16.40.100
+
+
+interface Tunnel1
+ip unnumbered GigabitEthernet1
+tunnel source GigabitEthernet1
+tunnel mode sdwan
+no shutdown
+exit
+
+sdwan
+interface GigabitEthernet1
+tunnel-interface
+encapsulation ipsec
+color mpls
+allow-service sshd
+allow-service netconf
+exit
+exit
+exit
+line vty 0
+transport input ssh
+commit
+
+request platform software sdwan root-cert-chain install bootflash:Mng-ROOTCA-cert.pem
+request platform software sdwan vedge_cloud activate chassis-number XXXX token XXXX

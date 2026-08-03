@@ -1,0 +1,9 @@
+hostname SW2
+no ip domain lookup
+line con 0
+logg sync
+vlan 20
+name vpn2
+int range g0/2,g0/3,g0/0,g0/1
+sw mode ac
+sw ac vlan 20

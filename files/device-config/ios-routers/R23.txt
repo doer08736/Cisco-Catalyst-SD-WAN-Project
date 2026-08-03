@@ -1,0 +1,21 @@
+no ip domain lookup
+line con 0
+logg sync
+hostname R23
+no cdp run
+int f0/0
+ip add 10.1.6.2 255.255.255.0
+no shut
+int lo1
+ip add 10.1.60.1 255.255.255.0
+no shut
+int lo2
+ip add 10.1.61.1 255.255.255.0
+no shut
+
+router ospf 110
+router-id 23.23.23.23
+network 0.0.0.0 255.255.255.255 area 0
+
+int range f0/0,lo1,lo2
+ip ospf network point-to-point

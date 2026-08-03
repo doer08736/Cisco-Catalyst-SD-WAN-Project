@@ -1,0 +1,18 @@
+no ip domain lookup
+line con 0
+logg sync
+hostname R26
+no cdp run
+int f0/0
+ip add 192.168.5.2 255.255.255.0
+no shut
+int lo1
+ip add 192.168.50.1 255.255.255.0
+no shut
+int lo2
+ip add 192.168.51.1 255.255.255.0
+no shut
+
+router eigrp ca
+address-family ipv4 unicast as 64511
+network 0.0.0.0 255.255.255.255

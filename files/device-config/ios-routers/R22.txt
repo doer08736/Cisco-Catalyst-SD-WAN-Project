@@ -1,0 +1,29 @@
+no ip domain lookup
+line con 0
+logg sync
+hostname R22
+no cdp run
+int f0/0
+ip add 192.168.2.2 255.255.255.0
+no shut
+int lo1
+ip add 192.168.20.1 255.255.255.0
+no shut
+int lo2
+ip add 192.168.21.1 255.255.255.0
+no shut
+
+
+! router bgp 64512
+! neighbor 192.168.2.1 remote-as 64512
+! neighbor 192.168.2.3 remote-as 64512
+! network 192.168.20.0 mask 255.255.255.0
+! network 192.168.21.0 mask 255.255.255.0
+
+
+! route-map CNH
+! set ip next-hop 192.168.2.100
+
+! router bgp 64512
+! neighbor 192.168.2.1 route-map CNH in
+! neighbor 192.168.2.3 route-map CNH in

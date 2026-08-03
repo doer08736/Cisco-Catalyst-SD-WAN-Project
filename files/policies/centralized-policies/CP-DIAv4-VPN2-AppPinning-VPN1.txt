@@ -1,0 +1,205 @@
+! Hub-N-Spoke VPN1 (with FW), App pinning for Internet (local TLOC) (restrict)
+! VPN2 Full Mesh (DIA with Application Visibility) for Norway
+
+viptela-policy:policy
+ data-policy _VPN1-VPN2_DIAv4-VPN2-AppPinning-VPN1
+  vpn-list VPN1-VPN2
+    sequence 1
+     match
+      source-data-prefix-list VPN2-ALL-Prefixes-Exact
+      destination-data-prefix-list VPN2-ALL-Prefixes-Exact
+     !
+     action accept
+     !
+    !
+    sequence 11
+     match
+      source-data-prefix-list VPN2-ALL-Prefixes-Exact
+      destination-data-prefix-list RFC1918
+     !
+     action drop
+      log
+     !
+    !
+    sequence 21
+     match
+      source-data-prefix-list DIA-Norway
+      app-list Trusted-DIA-App-Norway
+     !
+     action accept
+      nat use-vpn 0
+      nat fallback
+     !
+    !
+    sequence 31
+     match
+      source-data-prefix-list DIA-Auckland
+     !
+     action accept
+      nat use-vpn 0
+      nat fallback
+     !
+    !
+    sequence 41
+     match
+      source-data-prefix-list VPN1-ALL-Prefixes
+      app-list Critical-App-Norway-VPN1
+     !
+     action accept
+      set
+       local-tloc-list 
+        color mpls
+      !
+     !
+    !
+    sequence 51
+     match
+      source-data-prefix-list VPN1-ALL-Prefixes
+      app-list Non-Critical-App-Norway-VPN1
+     !
+     action accept
+      set
+       local-tloc-list 
+        color biz-internet
+        restrict
+      !
+     !
+    !
+  default-action accept
+ !
+ control-policy Service-Chaining-VPN1wDIAv4
+    sequence 1
+     match route
+      vpn-list VPN2
+      prefix-list _AnyIpv4PrefixList
+     !
+     action accept
+     !
+    !
+    sequence 11
+     match route
+      vpn-list VPN1
+      site-list HQ-SITE
+      prefix-list _AnyIpv4PrefixList
+     !
+     action accept
+     !
+    !
+    sequence 21
+     match route
+      site-list SPOKE-SITES
+      vpn-list VPN1
+      prefix-list _AnyIpv4PrefixList
+     !
+     action accept
+      set
+       service  FW vpn 1 tloc-list HQ-TLOC
+      !
+     !
+    !
+  default-action accept
+ !
+ lists
+  app-list Critical-App-Norway-VPN1
+   app-family audio_video 
+   app-family audio-video 
+  !
+  app-list Non-Critical-App-Norway-VPN1
+   app-family microsoft-office 
+   app-family microsoft_office 
+   app-family audio_video 
+   app-family application-service 
+   app-family instant-messaging 
+   app-family erp 
+   app-family audio-video 
+   app-family web 
+   app-family peer-to-peer 
+   app-family database 
+  !
+  app-list Trusted-DIA-App-Norway
+   app webex 
+   app zoom-meetings 
+   app google-accounts 
+   app webex-control 
+   app webex-meeting 
+   app webex-video 
+   app zoom 
+   app ident 
+   app gotomeeting 
+   app ms_teams 
+   app webex_weboffice 
+   app ytimg 
+   app youtube_hd 
+   app webex-audio 
+   app auth 
+   app gtalk 
+   app youtube 
+   app linkedin 
+   app webex-app-sharing 
+   app webex-media 
+   app ms-teams 
+  !
+  data-prefix-list DIA-Auckland
+   ip-prefix 192.168.20.0/24 
+  !
+  data-prefix-list DIA-Norway
+   ip-prefix 192.168.31.0/24 
+  !
+  data-prefix-list RFC1918
+   ip-prefix 10.0.0.0/8 
+   ip-prefix 172.16.0.0/12 
+   ip-prefix 192.168.0.0/16 
+  !
+  data-prefix-list VPN1-ALL-Prefixes
+   ip-prefix 10.1.0.0/16 
+  !
+  data-prefix-list VPN2-ALL-Prefixes-Exact
+   ip-prefix 192.168.0.0/21 
+   ip-prefix 192.168.10.0/24 
+   ip-prefix 192.168.11.0/24 
+   ip-prefix 192.168.20.0/24 
+   ip-prefix 192.168.21.0/24 
+   ip-prefix 192.168.30.0/24 
+   ip-prefix 192.168.31.0/24 
+   ip-prefix 192.168.40.0/24 
+   ip-prefix 192.168.41.0/24 
+   ip-prefix 192.168.50.0/24 
+   ip-prefix 192.168.51.0/24 
+   ip-prefix 192.168.60.0/24 
+   ip-prefix 192.168.61.0/24 
+  !
+  site-list HQ-SITE
+   site-id 10 
+  !
+  site-list SPOKE-SITES
+   site-id 20 
+   site-id 30 
+   site-id 40 
+   site-id 50 
+   site-id 60 
+  !
+  tloc-list HQ-TLOC
+   tloc 10.10.10.10 color biz-internet encap ipsec 
+   tloc 10.10.10.10 color mpls encap ipsec 
+  !
+  vpn-list VPN1
+   vpn 1 
+  !
+  vpn-list VPN1-VPN2
+   vpn 1 
+   vpn 2 
+  !
+  vpn-list VPN2
+   vpn 2 
+  !
+  prefix-list _AnyIpv4PrefixList
+   ip-prefix 0.0.0.0/0 le 32 
+  !
+ !
+!
+apply-policy
+ site-list SPOKE-SITES
+  data-policy _VPN1-VPN2_DIAv4-VPN2-AppPinning-VPN1 from-service
+  control-policy Service-Chaining-VPN1wDIAv4 out
+ !
+!

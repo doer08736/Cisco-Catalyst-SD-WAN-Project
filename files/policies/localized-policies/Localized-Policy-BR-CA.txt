@@ -1,0 +1,23 @@
+! deny ssh telnet to BR-Norway from BR-CA using ACL ingress in Gi4
+
+policy
+ access-list Deny-SSH-To-NorwayR31
+    sequence 1
+     match
+      destination-data-prefix-list Norway-VPN1-Prefix
+      destination-port 22 23
+     !
+     action drop
+      log
+     !
+    !
+  default-action accept
+ !
+ lists
+  data-prefix-list Norway-VPN1-Prefix
+   ip-prefix 192.168.3.0/24 
+   ip-prefix 192.168.30.0/24 
+   ip-prefix 192.168.31.0/24 
+  !
+ !
+!

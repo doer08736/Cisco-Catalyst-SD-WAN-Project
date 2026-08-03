@@ -1,0 +1,16 @@
+conf t
+system
+host-name Catalyst-Validator
+system-ip 10.10.10.2
+site-id 1
+organization-name doer
+clock timezone Asia/Kolkata
+vbond 100.1.2.2 local
+exit
+vpn 0
+interface ge0/0
+no shutdown
+ip add 100.1.2.2/24
+exit
+ip route 0.0.0.0/0 100.1.2.254
+commit and-quit

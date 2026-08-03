@@ -1,0 +1,21 @@
+no ip domain lookup
+line con 0
+logg sync
+hostname CRouter
+no cdp run
+int f0/0
+ip add 100.1.2.254 255.255.255.0
+no shut
+int f1/0
+ip add 172.16.0.1 255.255.255.0
+no shut
+int f2/0
+ip add 100.1.1.1 255.255.255.0
+no shut
+
+ip route 0.0.0.0 0.0.0.0 f2/0 100.1.1.100
+
+router ospf 110
+int f1/0,f0/0
+ip ospf 110 area 0
+ip ospf network point-to-point

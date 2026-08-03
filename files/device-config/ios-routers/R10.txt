@@ -1,0 +1,18 @@
+no ip domain lookup
+line con 0
+logg sync
+hostname R10
+no cdp run
+int f0/0
+ip add 192.168.6.2 255.255.255.0
+no shut
+int lo1
+ip add 192.168.60.1 255.255.255.0
+no shut
+int lo2
+ip add 192.168.61.1 255.255.255.0
+no shut
+
+router eigrp mumbai
+address-family ipv4 unicast as 64511
+network 0.0.0.0 255.255.255.255

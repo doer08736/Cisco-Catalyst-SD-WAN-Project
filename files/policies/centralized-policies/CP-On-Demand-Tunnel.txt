@@ -1,0 +1,79 @@
+! On-Demand-Tunnel for both VPN
+
+viptela-policy:policy
+ control-policy On-Demand-Tunnel
+    sequence 1
+     match route
+      site-list HQ-SITE
+      prefix-list _AnyIpv4PrefixList
+     !
+     action accept
+     !
+    !
+    sequence 11
+     match route
+      site-list SPOKE-SITES
+      color-list COLOR-MPLS
+      prefix-list _AnyIpv4PrefixList
+     !
+     action accept
+      set
+       tloc-action backup
+       tloc-list HQ-TLOC-MPLS
+      !
+     !
+    !
+    sequence 21
+     match route
+      site-list SPOKE-SITES
+      color-list COLOR-Internet
+      prefix-list _AnyIpv4PrefixList
+     !
+     action accept
+      set
+       tloc-action backup
+       tloc-list HQ-TLOC-Internet
+      !
+     !
+    !
+    sequence 31
+     match tloc
+     !
+     action accept
+     !
+    !
+  default-action accept
+ !
+ lists
+  color-list COLOR-Internet
+   color biz-internet 
+  !
+  color-list COLOR-MPLS
+   color mpls 
+  !
+  site-list HQ-SITE
+   site-id 10 
+  !
+  site-list SPOKE-SITES
+   site-id 20 
+   site-id 30 
+   site-id 40 
+   site-id 50 
+   site-id 60 
+  !
+  tloc-list HQ-TLOC-Internet
+   tloc 10.10.10.10 color biz-internet encap ipsec 
+  !
+  tloc-list HQ-TLOC-MPLS
+   tloc 10.10.10.10 color mpls encap ipsec 
+  !
+  prefix-list _AnyIpv4PrefixList
+   ip-prefix 0.0.0.0/0 le 32 
+  !
+ !
+!
+apply-policy
+ site-list SPOKE-SITES
+  control-policy On-Demand-Tunnel out
+ !
+!

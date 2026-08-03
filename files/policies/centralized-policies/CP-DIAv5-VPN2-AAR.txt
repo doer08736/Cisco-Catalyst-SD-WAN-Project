@@ -1,0 +1,336 @@
+! Hub-N-Spoke VPN1 (with FW), VPN2 Full Mesh (DIA with Application Visibility) for Norway + AAR for VPN1
+
+viptela-policy:policy
+  sla-class Internet-SLA
+   latency 300
+   loss 3
+   jitter 60
+  !
+  sla-class MPLS-SLA
+   latency 150
+   loss 1
+   jitter 30
+   fallback-best-tunnel
+      criteria latency jitter
+   !
+  !
+ data-policy _VPN2_DIAv5-VPN2-AAR
+  vpn-list VPN2
+    sequence 1
+     match
+      source-data-prefix-list VPN2-ALL-Prefixes-Exact
+      destination-data-prefix-list VPN2-ALL-Prefixes-Exact
+     !
+     action accept
+     !
+    !
+    sequence 11
+     match
+      source-data-prefix-list VPN2-ALL-Prefixes-Exact
+      destination-data-prefix-list RFC1918
+     !
+     action drop
+      log
+     !
+    !
+    sequence 21
+     match
+      source-data-prefix-list DIA-Norway
+      app-list Trusted-DIA-App-Norway
+     !
+     action accept
+      nat use-vpn 0
+      nat fallback
+     !
+    !
+    sequence 31
+     match
+      source-data-prefix-list DIA-Auckland
+     !
+     action accept
+      nat use-vpn 0
+      nat fallback
+     !
+    !
+  default-action accept
+ !
+ control-policy Service-Chaining-VPN1wDIAv5
+    sequence 1
+     match route
+      vpn-list VPN2
+      prefix-list _AnyIpv4PrefixList
+     !
+     action accept
+     !
+    !
+    sequence 11
+     match route
+      vpn-list VPN1
+      site-list HQ-SITE
+      prefix-list _AnyIpv4PrefixList
+     !
+     action accept
+     !
+    !
+    sequence 21
+     match route
+      site-list SPOKE-SITES
+      vpn-list VPN1
+      prefix-list _AnyIpv4PrefixList
+     !
+     action accept
+      set
+       service  FW vpn 1 tloc-list HQ-TLOC
+      !
+     !
+    !
+  default-action accept
+ !
+ app-route-policy _VPN1_AARv1
+  vpn-list VPN1
+    sequence 1
+     match
+      app-list Voice_Apps
+      source-data-prefix-list VPN1-ALL-Prefixes
+     !
+     action
+      sla-class MPLS-SLA fallback-to-best-path preferred-color mpls
+     !
+    !
+    sequence 11
+     match
+      source-data-prefix-list VPN1-ALL-Prefixes
+      app-list webex_apps
+     !
+     action
+      sla-class Internet-SLA  preferred-color biz-internet
+     !
+    !
+ !
+ lists
+  app-list Trusted-DIA-App-Norway
+   app webex 
+   app zoom-meetings 
+   app google-accounts 
+   app webex-control 
+   app webex-meeting 
+   app webex-video 
+   app zoom 
+   app ident 
+   app gotomeeting 
+   app ms_teams 
+   app webex_weboffice 
+   app ytimg 
+   app youtube_hd 
+   app webex-audio 
+   app auth 
+   app gtalk 
+   app youtube 
+   app linkedin 
+   app webex-app-sharing 
+   app webex-media 
+   app ms-teams 
+  !
+  app-list Voice_Apps
+   app sip_soap 
+   app ringcentral-audio 
+   app webex 
+   app sip 
+   app google-services-audio 
+   app ringcentral-control 
+   app h323 
+   app sccp 
+   app adobe-connect 
+   app circuit-video 
+   app rtp-video 
+   app amazon-chime 
+   app google-services-media 
+   app ss7ns 
+   app cisco-jabber-audio 
+   app cisco-phone-video 
+   app rtp-audio 
+   app cisco-media-audio 
+   app ringcentral-media 
+   app cisco-tv 
+   app rtp 
+   app ring_central 
+   app 3gpp_li 
+   app circuit-media 
+   app conferencing 
+   app google 
+   app video-over-http 
+   app tpip 
+   app cisco-ip-sla 
+   app google-services-video 
+   app cisco-smart-probe 
+   app dingtalk-media 
+   app cisco-phone-audio 
+   app mgcp 
+   app rtcp 
+   app epdg_tunnel 
+   app cisco-ip-camera 
+   app audio-over-http 
+   app zoom 
+   app h245 
+   app rtsp 
+   app circuit-audio 
+   app ms-teams-video 
+   app clearspace 
+   app wifi-calling 
+   app cisco_ucm 
+   app ms-teams-media 
+   app webex_weboffice 
+   app cisco-collab-video 
+   app jive-software 
+   app lync 
+   app amazon-chime-media 
+   app webex-app-sharing 
+   app douyin-media 
+   app lync_online 
+   app cisco-jabber-im 
+   app rtsps 
+   app adobe_connect 
+   app skype 
+   app ms_communicator 
+   app web-rtc-video 
+   app dmp 
+   app zoom-meetings 
+   app uaudp_rtp 
+   app sgcp 
+   app jabber-audio 
+   app cisco-collab-audio 
+   app telepresence-media 
+   app gotomeeting 
+   app ms_teams 
+   app voov-meeting 
+   app cisco-phone 
+   app web-rtc 
+   app jabber 
+   app cisco_corp_tv 
+   app ms-teams-audio 
+   app circuit 
+   app ms-teams-app-sharing 
+   app zoom-phone 
+   app cisco-jabber-video 
+   app cisco_smartprobe 
+   app conference-server 
+   app ms-lync-video 
+   app ms-lync-control 
+   app webex-media 
+   app cisco-jabber-control 
+   app jabber-video 
+   app skinny 
+   app sip-tls 
+   app ms-lync-audio 
+   app ringcentral-video 
+   app webex-control 
+   app web-rtc-audio 
+   app telepresence-audio 
+   app cisco-collaboration 
+   app cisco-media-video 
+   app ms-lync 
+   app sdnskmp 
+   app webex-meeting 
+   app webex-video 
+   app h225 
+   app cisco-phone-control 
+   app cisco-phone-media 
+   app telepresence-control 
+   app lifesize 
+   app itunes-media 
+   app webrtc 
+   app webex-audio 
+   app ringcentral 
+   app cisco-collab-control 
+   app ms-teams 
+  !
+  app-list webex_apps
+   app cisco_spark 
+   app cisco-spark-video 
+   app webex 
+   app cisco-spark 
+   app cisco-spark-media 
+   app webex-control 
+   app cisco-spark-audio 
+   app cisco-collaboration 
+   app webex-meeting 
+   app webex-video 
+   app cisco-collab-audio 
+   app webex_weboffice 
+   app cisco-collab-video 
+   app webex-audio 
+   app webex-app-sharing 
+   app cisco-collab-control 
+   app webex-media 
+  !
+  data-prefix-list DIA-Auckland
+   ip-prefix 192.168.20.0/24 
+  !
+  data-prefix-list DIA-Norway
+   ip-prefix 192.168.31.0/24 
+  !
+  data-prefix-list RFC1918
+   ip-prefix 10.0.0.0/8 
+   ip-prefix 172.16.0.0/12 
+   ip-prefix 192.168.0.0/16 
+  !
+  data-prefix-list VPN1-ALL-Prefixes
+   ip-prefix 10.1.0.0/16 
+  !
+  data-prefix-list VPN2-ALL-Prefixes-Exact
+   ip-prefix 192.168.0.0/21 
+   ip-prefix 192.168.10.0/24 
+   ip-prefix 192.168.11.0/24 
+   ip-prefix 192.168.20.0/24 
+   ip-prefix 192.168.21.0/24 
+   ip-prefix 192.168.30.0/24 
+   ip-prefix 192.168.31.0/24 
+   ip-prefix 192.168.40.0/24 
+   ip-prefix 192.168.41.0/24 
+   ip-prefix 192.168.50.0/24 
+   ip-prefix 192.168.51.0/24 
+   ip-prefix 192.168.60.0/24 
+   ip-prefix 192.168.61.0/24 
+  !
+  site-list ALL-SITES
+   site-id 10 
+   site-id 20 
+   site-id 30 
+   site-id 40 
+   site-id 50 
+   site-id 60 
+  !
+  site-list HQ-SITE
+   site-id 10 
+  !
+  site-list SPOKE-SITES
+   site-id 20 
+   site-id 30 
+   site-id 40 
+   site-id 50 
+   site-id 60 
+  !
+  tloc-list HQ-TLOC
+   tloc 10.10.10.10 color biz-internet encap ipsec 
+   tloc 10.10.10.10 color mpls encap ipsec 
+  !
+  vpn-list VPN1
+   vpn 1 
+  !
+  vpn-list VPN2
+   vpn 2 
+  !
+  prefix-list _AnyIpv4PrefixList
+   ip-prefix 0.0.0.0/0 le 32 
+  !
+ !
+!
+apply-policy
+ site-list SPOKE-SITES
+  data-policy _VPN2_DIAv5-VPN2-AAR from-service
+  control-policy Service-Chaining-VPN1wDIAv5 in
+ !
+ site-list ALL-SITES
+  app-route-policy _VPN1_AARv1
+ !
+!
