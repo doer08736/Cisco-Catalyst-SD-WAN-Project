@@ -1,3 +1,11 @@
+#### Description
+- Worked on a Cisco Catalyst SD-WAN built on EVE-NG hosted in Google Cloud.
+- Onboarded Control Components (Manager, Controller, Validator) along with C8000V WAN Edge routers and
+- analyzed their communications.
+- Configured centralized and localized policies to implement use cases, including custom Hub-and-Spoke, service
+- chaining, path manipulation, DIA (Direct Internet Access), application performance optimization, route leaking, on-demand tunneling.
+- Implemented VRRP for high availability and TLOC Extension to allow WAN Edge router to communicate over adjacent WAN Edge router transports.
+---
 #### Lab-Specs
 ##### Platform
 
