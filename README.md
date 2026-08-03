@@ -45,21 +45,21 @@
 ---
 #### Project Images
 * 0). Login Dashboard
-![LoginDashboard](LoginDashboard.png)
+![LoginDashboard](imgs/LoginDashboard.png)
 * 1). Topology
-![Topology](Topology.png)
+![Topology](imgs/Topology.png)
 * 2). Control Components status
-![ControlConnection](ControlConnection.png)
+![ControlConnection](imgs/ControlConnection.png)
 * 3). Overview of WAN Edges and Control Components
-![Onboarded](Onboarded.png)
+![Onboarded](imgs/Onboarded.png)
 * 4). Device Template Creation
 ![DeviceTemplate](imgs/DeviceTemplate.png)
 * 5). Updating Device Template
-![DevTemplate](DevTemplate.png)
+![DevTemplate](imgs/DevTemplate.png)
 * 6). Tunnel Dashboard
-![TunnelD](TunnelD.png)
+![TunnelD](imgs/TunnelD.png)
 * 7). OMP Routes
-![OMPRoutes](OMPRoutes.png)
+![OMPRoutes](imgs/OMPRoutes.png)
 * 8). Hub and Spoke Toplogy
 ![HubNSpoke](imgs/HubNSpoke.png)
 * 9). Custom Hub and Spoke Toplogy
@@ -67,9 +67,9 @@
 * 10). Ultimate TLOC
 ![Ultimate-TLOC](imgs/Ultimate-TLOC.png)
 * 11). DIA Configuration
-![DIA](DIA.png)
+![DIA](imgs/DIA.png)
 * 12). Flow Simulation
-![FlowSim](FlowSim.png)
+![FlowSim](imgs/FlowSim.png)
 ---
 #### Working (Better version)
 * Currently working on latest version with better topology design
