@@ -27,15 +27,15 @@
 ---
 ##### Devices and Appliances
 
-| Device Type         | Addon Type | Template             | Image                                           | Filename                       | Quantity | Remarks                                       |
-| ------------------- | ---------- | -------------------- | ----------------------------------------------- | ------------------------------ | -------- | --------------------------------------------- |
-| Catalyst Manager    | qemu       | Viptela vManage      | vtmgmt-20.13                                    | virtioa.qcow2 + virtioab.qcow2 | 1        | viptela-vmanage-20.15.5.2-genericx86-64.qcow2 |
-| Catalyst Validator  | qemu       | Viptela vBond        | vtbond-20.13                                    | virtioa.qcow2                  | 1        | viptela-bond-20.15.5.2-genericx86-64.qcow2    |
-| Catalyst Controller | qemu       | Viptela vSmart       | vtsmart-20.13                                   | virtioa.qcow2                  | 2        | viptela-vsmart-20.15.5.2-genericx86-64.qcow2  |
-| Firewall            | qemu       | Palo Alto            | paloalto-11.0.0                                 | virtioa.qcow2                  | 3        |                                               |
-| Router              | dynamips   | Cisco IOS 7206VXR    | c7200-adventerprise9-mz.153-3.XB12.image        | virtioa.qcow2                  | 15       |                                               |
-| Router              | qemu       | Cisco Catalyst 8000v | c8000v-17.13.01a                                | virtioa.qcow2                  | 8        |                                               |
-| L2 Switch           | qemu       | Cisco vIOS Switch    | viosl2-adventerprisek9-m.SSA.high_iron_20200929 | virtioa.qcow2                  | 8        |                                               |
+| Device Type         | Addon Type | Template             | Image                                           | Filename                       | Quantity | Remarks                                     |
+| ------------------- | ---------- | -------------------- | ----------------------------------------------- | ------------------------------ | -------- | ------------------------------------------- |
+| Catalyst Manager    | qemu       | Viptela vManage      | vtmgmt-20.13.1                                  | virtioa.qcow2 + virtioab.qcow2 | 1        | viptela-vmanage-20.13.1-genericx86-64.qcow2 |
+| Catalyst Validator  | qemu       | Viptela vBond        | vtbond-20.13.1                                  | virtioa.qcow2                  | 1        | viptela-bond-20.13.1-genericx86-64.qcow2    |
+| Catalyst Controller | qemu       | Viptela vSmart       | vtsmart-20.13.1                                 | virtioa.qcow2                  | 2        | viptela-vsmart-20.13.1-genericx86-64.qcow2  |
+| Firewall            | qemu       | Palo Alto            | paloalto-11.0.0                                 | virtioa.qcow2                  | 3        |                                             |
+| Router              | dynamips   | Cisco IOS 7206VXR    | c7200-adventerprise9-mz.153-3.XB12.image        | virtioa.qcow2                  | 15       |                                             |
+| Router              | qemu       | Cisco Catalyst 8000v | c8000v-17.13.01a                                | virtioa.qcow2                  | 8        |                                             |
+| L2 Switch           | qemu       | Cisco vIOS Switch    | viosl2-adventerprisek9-m.SSA.high_iron_20200929 | virtioa.qcow2                  | 8        |                                             |
 
 
 ---
